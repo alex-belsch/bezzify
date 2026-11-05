@@ -1,0 +1,15 @@
+{
+    "bezzify": {
+        "cookie": {
+            "groupName": "Marketing Auswertung (Bezzify)",
+            "groupDescription": "Hilft uns zu verstehen, über welche Kanäle Besucher zu uns finden und welche Werbung wirkt. Dafür wird eine zufällige Kennung gespeichert.",
+            "measurement": "Messung der Besuchsquellen",
+            "measurementDescription": "Zufällige Kennung, mit der wir Besuche und Käufe den Kanälen zuordnen. Es werden keine Daten an Werbeplattformen übermittelt.",
+            "marketing": "Rückmeldung an Werbeplattformen",
+            "marketingDescription": "Käufe werden mit gehashter Mailadresse, IP Adresse und Werbecookies an Meta, Google, TikTok, Pinterest und Awin gemeldet, damit diese Werbung messen und verbessern können."
+        },
+        "survey": {
+            "thanks": "Danke für deine Antwort!"
+        }
+    }
+}

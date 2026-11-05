@@ -1,0 +1,41 @@
+# Bezzify mit PostgreSQL. In Coolify als "Docker Compose" anlegen, Domain auf Port 8787 zeigen lassen
+# und die Variablen aus .env.example setzen.
+#
+# Der Port ist nur lokal erreichbar: Bezzify gehört hinter einen Reverse Proxy (Coolify, Traefik, Caddy).
+# Direkt aus dem Internet erreichbar könnte jeder X-Forwarded-For fälschen und so Rate Limits umgehen.
+services:
+  bezzify:
+    build: .
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgres://bezzify:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD fehlt}@db:5432/bezzify
+      APP_SECRET: ${APP_SECRET:?APP_SECRET fehlt}
+      PUBLIC_URL: ${PUBLIC_URL:?PUBLIC_URL fehlt}
+      TRUST_PROXY: ${TRUST_PROXY:-1}
+      RETENTION_DAYS: ${RETENTION_DAYS:-400}
+      MATCH_DATA_RETENTION_DAYS: ${MATCH_DATA_RETENTION_DAYS:-7}
+      SESSION_TIMEOUT_MINUTES: ${SESSION_TIMEOUT_MINUTES:-30}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    ports:
+      - "127.0.0.1:8787:8787"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: bezzify
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD fehlt}
+      POSTGRES_DB: bezzify
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bezzify -d bezzify"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  pgdata:

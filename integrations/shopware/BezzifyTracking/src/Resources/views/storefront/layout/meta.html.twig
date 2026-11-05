@@ -1,0 +1,14 @@
+{% sw_extends '@Storefront/storefront/layout/meta.html.twig' %}
+
+{% block layout_head_javascript_tracking %}
+    {{ parent() }}
+    {% set bzfEndpoint = config('BezzifyTracking.config.endpoint') %}
+    {% set bzfSite = config('BezzifyTracking.config.siteKey') %}
+    {% if bzfEndpoint and bzfSite %}
+        <script>window.bezzify=window.bezzify||function(){(bezzify.q=bezzify.q||[]).push(arguments)};</script>
+        <script async src="{{ bzfEndpoint|trim('/', 'right') }}/t.js"
+                data-site="{{ bzfSite }}"
+                data-consent="{{ config('BezzifyTracking.config.consentMode')|default('shopware') }}"
+                {% if config('BezzifyTracking.config.cookieless') %}data-cookieless="true"{% endif %}></script>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/shopware/shopware/trunk/src/Core/System/SystemConfig/Schema/config.xsd">
+    <card>
+        <title>Bezzify</title>
+        <title lang="de-DE">Bezzify</title>
+
+        <input-field>
+            <name>endpoint</name>
+            <label>Endpoint</label>
+            <placeholder>https://t.deinshop.de</placeholder>
+            <helpText lang="de-DE">Adresse des Bezzify Servers ohne Schrägstrich am Ende</helpText>
+        </input-field>
+
+        <input-field>
+            <name>siteKey</name>
+            <label>Site Key</label>
+            <placeholder>pk_...</placeholder>
+        </input-field>
+
+        <input-field type="password">
+            <name>secretKey</name>
+            <label>Secret Key</label>
+            <placeholder>sk_...</placeholder>
+        </input-field>
+
+        <input-field type="single-select">
+            <name>consentMode</name>
+            <label>Einwilligung</label>
+            <defaultValue>shopware</defaultValue>
+            <options>
+                <option>
+                    <id>shopware</id>
+                    <name>Shopware Cookie Consent (Gruppe Bezzify)</name>
+                </option>
+                <option>
+                    <id>required</id>
+                    <name>Eigener Banner ruft bezzify('consent', ...) auf</name>
+                </option>
+                <option>
+                    <id>cookiebot</id>
+                    <name>Cookiebot</name>
+                </option>
+            </options>
+        </input-field>
+
+        <input-field type="bool">
+            <name>cookieless</name>
+            <label>Ohne Einwilligung anonyme Einstiege zählen</label>
+            <defaultValue>false</defaultValue>
+            <helpText>German supervisory authorities consider this to require consent as well, because the script reads the page address and referrer (§ 25 TDDDG). Only enable after a legal review.</helpText>
+            <helpText lang="de-DE">Nach Ansicht der deutschen Datenschutzbehörden braucht auch das eine Einwilligung, weil das Skript Adresse und Herkunft der Seite ausliest (§ 25 TDDDG). Nur nach rechtlicher Prüfung einschalten.</helpText>
+        </input-field>
+    </card>
+</config>

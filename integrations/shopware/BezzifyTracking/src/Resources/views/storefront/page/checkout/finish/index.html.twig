@@ -1,0 +1,54 @@
+{% sw_extends '@Storefront/storefront/page/checkout/finish/index.html.twig' %}
+
+{% block page_checkout_finish_details %}
+    {{ parent() }}
+    {% set bzfSurvey = page.extensions.bezzifySurvey %}
+    {% if bzfSurvey %}
+        <section class="bezzify-survey card mb-4" data-url="{{ path('frontend.bezzify.survey') }}" data-order="{{ bzfSurvey.orderId }}">
+            <div class="card-body">
+                <h2 class="h5">{{ bzfSurvey.question }}</h2>
+                {# hidden liegt am äußeren Element, d-flex würde es sonst mit !important überstimmen #}
+                <div class="bezzify-survey-answers">
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for answer in bzfSurvey.answers %}
+                            <button type="button" class="btn btn-outline-primary btn-sm" value="{{ answer.id }}">{{ answer.label }}</button>
+                        {% endfor %}
+                    </div>
+                </div>
+                <p class="bezzify-survey-thanks mb-0" hidden>{{ 'bezzify.survey.thanks'|trans|sw_sanitize }}</p>
+            </div>
+        </section>
+        {# ohne neues Laden der Seite, sonst lösten andere Pixel den Kauf ein zweites Mal aus #}
+        <script>
+            (function () {
+                var box = document.querySelector('.bezzify-survey');
+                if (!box || !window.fetch || !window.URLSearchParams) return;
+                var buttons = box.querySelectorAll('button[value]');
+                var setBusy = function (busy) {
+                    for (var i = 0; i < buttons.length; i++) buttons[i].disabled = busy;
+                };
+                box.addEventListener('click', function (event) {
+                    var button = event.target.closest('button[value]');
+                    if (!button) return;
+                    var body = new URLSearchParams();
+                    body.append('orderId', box.getAttribute('data-order'));
+                    body.append('answer', button.value);
+                    setBusy(true);
+                    fetch(box.getAttribute('data-url'), {
+                        method: 'POST',
+                        body: body,
+                        credentials: 'same-origin',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    })
+                        .then(function (response) {
+                            if (!response.ok) throw new Error('HTTP ' + response.status);
+                            box.querySelector('.bezzify-survey-answers').hidden = true;
+                            box.querySelector('.bezzify-survey-thanks').hidden = false;
+                        })
+                        // nach einem Fehler lässt sich erneut antworten
+                        .catch(function () { setBusy(false); });
+                });
+            })();
+        </script>
+    {% endif %}
+{% endblock %}

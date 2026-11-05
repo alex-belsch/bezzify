@@ -1,0 +1,15 @@
+{
+    "bezzify": {
+        "cookie": {
+            "groupName": "Marketing attribution (Bezzify)",
+            "groupDescription": "Helps us understand which channels bring visitors to our shop and which ads work. A random identifier is stored for this.",
+            "measurement": "Measuring traffic sources",
+            "measurementDescription": "A random identifier that lets us attribute visits and purchases to channels. No data is sent to advertising platforms.",
+            "marketing": "Reporting to advertising platforms",
+            "marketingDescription": "Purchases are reported to Meta, Google, TikTok, Pinterest and Awin with a hashed email address, IP address and ad cookies so they can measure and improve ads."
+        },
+        "survey": {
+            "thanks": "Thanks for your answer!"
+        }
+    }
+}

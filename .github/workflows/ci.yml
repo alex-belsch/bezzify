@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: bezzify
+          POSTGRES_PASSWORD: bezzify
+          POSTGRES_DB: bezzify_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U bezzify -d bezzify_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - name: Tests gegen PostgreSQL, je Datei eine leere Datenbank
+        run: |
+          for name in e2e review hardening identities survey; do
+            psql -h localhost -U bezzify -d bezzify_test -c "create database bezzify_$name"
+            TEST_DATABASE_URL=postgres://bezzify:bezzify@localhost:5432/bezzify_$name npx vitest run test/$name.test.ts
+          done
+        env:
+          PGPASSWORD: bezzify
+      - run: npm run build
+      - name: PHP Syntax der Shop Plugins
+        run: find integrations -name '*.php' -print0 | xargs -0 -n1 php -l

@@ -1,0 +1,30 @@
+# Die uid aus der von der Shopify CLI erzeugten Datei hier übernehmen (shopify app generate extension --template checkout_ui).
+api_version = "2026-10"
+
+[[extensions]]
+name = "Bezzify Umfrage"
+handle = "bezzify-survey"
+type = "ui_extension"
+
+[[extensions.targeting]]
+target = "purchase.thank-you.block.render"
+module = "./src/ThankYou.jsx"
+
+# Abruf der Frage und Senden der Antwort an den eigenen Bezzify Server. Im Partner Dashboard der App unter
+# API Zugriffsanfragen freizugeben.
+[extensions.capabilities]
+network_access = true
+
+[extensions.settings]
+
+[[extensions.settings.fields]]
+key = "endpoint"
+type = "single_line_text_field"
+name = "Bezzify Endpoint"
+description = "Adresse des Bezzify Servers, etwa https://t.deinshop.de"
+
+[[extensions.settings.fields]]
+key = "site_key"
+type = "single_line_text_field"
+name = "Site Key"
+description = "Öffentlicher Site Key aus dem Bezzify Dashboard, beginnt mit pk_"
